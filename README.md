@@ -6,6 +6,8 @@ A simple script for dynamically registering and starting GitHub Actions Self-Hos
 The self-hosted runner proper must be downloaded and extracted on the build machine.
 
 ## To use:
+On the build machine, 
+
 run `export GITHUB_USERNAME=<your username>`
 
 run `export GITHUB_PERSONAL_ACCESS_TOKEN=<Your PAT>`
