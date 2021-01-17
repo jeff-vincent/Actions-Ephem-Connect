@@ -1,6 +1,6 @@
 # Actions-Ephem-Connect
 
-A simple script for dynamically registering and starting GitHub Actions Self-Hosted Runners. 
+A simple script for dynamically registering and starting GitHub Actions Self-Hosted Runners for a single repository. 
 
 ## Prereqs:
 The self-hosted runner proper must be downloaded and extracted on the build machine.
