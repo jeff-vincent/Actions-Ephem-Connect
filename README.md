@@ -12,4 +12,4 @@ In the build env,
 set environment variable `GITHUB_USERNAME`
 set environment variable `GITHUB_PERSONAL_ACCESS_TOKEN`
 
-run `python3 github_actions_ephem_connect.py`
+run `python3 runner_connect.py`
