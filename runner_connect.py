@@ -5,7 +5,7 @@ import requests
 import subprocess
 
 CONFIG = configparser.ConfigParser()
-CONFIG.read('github_actions_ephem_connect.cfg')
+CONFIG.read('runner_connect.cfg')
 
 GITHUB_USERNAME = os.environ.get('GITHUB_USERNAME')
 GITHUB_PERSONAL_ACCESS_TOKEN = os.environ.get('GITHUB_PERSONAL_ACCESS_TOKEN')
