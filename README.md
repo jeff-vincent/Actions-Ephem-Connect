@@ -2,6 +2,9 @@
 
 A simple script for dynamically registering and starting GitHub Actions Self-Hosted Runners. 
 
+## Prereqs:
+The self-hosted runner proper must be downloaded and extracted on the build machine.
+
 ## To use:
 run `export GITHUB_USERNAME=<your username>`
 
