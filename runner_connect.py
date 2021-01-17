@@ -2,7 +2,9 @@ import configparser
 import json
 import logging
 import os
+import random
 import requests
+import string
 import subprocess
 
 logging.basicConfig(filename='runner-connect.log', level=logging.DEBUG)
@@ -38,11 +40,17 @@ class GitHubActionsRunnerConnect:
         except Exception as e:
             logging.error(str(e))
 
+    def _create_runner_name(self):
+        letters = string.ascii_lowercase
+        prefix = CONFIG['runner']['name']
+        suffix = ''.join(random.choice(letters) for i in range(10))
+        return f"{prefix}-{suffix}"
+
     def register_runner(self):
         try:
             repo_path = CONFIG['repo']['path']
             labels = CONFIG['runner']['labels']
-            name = CONFIG['runner']['name']
+            name = self._create_runner_name()
             runner_path = PATH_TO_RUNNER
             config_path = os.path.join(runner_path, 'config.sh')
             cmd = [config_path, '--url', repo_path, '--token', self.token, '--name', name, '--work', '_work', '--labels', labels]
