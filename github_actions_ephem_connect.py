@@ -3,8 +3,6 @@ import json
 import os
 import requests
 import subprocess
-from subprocess import Popen
-from subprocess import PIPE
 
 CONFIG = configparser.ConfigParser()
 CONFIG.read('github_actions_ephem_connect.cfg')
@@ -38,17 +36,25 @@ class GitHubActionsEphemConnect:
 
 
     def register_runner(self):
-        cmd = ['./config.sh', '--url', 'https://github.com/jeff-vincent/iOS-Example', '--token', self.token, '--name', 'test3', '--work', '_work', '--labels', 'test']
-        response = subprocess.run(cmd)
+        repo_path = CONFIG['repo']['path']
+        labels = CONFIG['runner']['labels']
+        name = CONFIG['runner']['name']
+        runner_path = PATH_TO_RUNNER
+        config_path = os.path.join(runner_path, 'config.sh')
+        cmd = [config_path, '--url', repo_path, '--token', self.token, '--name', name, '--work', '_work', '--labels', labels]
+        response = subprocess.run(cmd, capture_output=True)
         print(response)
 
-    # def register_runner1(self):
-    #     cmd = ['./config.sh', '--url', 'https://github.com/jeff-vincent/iOS-Example', '--token', self.token, '--name', 'test2', '--work', '_work', '--labels', 'test']
-    #     p = Popen(cmd)
-    #     response = p.communicate(input=b'\n')
-    #     print(response)
+
+    def start_runner(self):
+        runner_path = PATH_TO_RUNNER
+        start_path = os.path.join(runner_path, 'run.sh')
+        response = subprocess.run(start_path, capture_output=True)
+        print(response)
 
 
-ephem_connect = GitHubActionsEphemConnect()
-ephem_connect.generate_token()
-ephem_connect.register_runner()
+if __name__ == '__main__':
+    ephem_connect = GitHubActionsEphemConnect()
+    ephem_connect.generate_token()
+    ephem_connect.register_runner()
+    ephem_connect.start_runner()
