@@ -8,4 +8,4 @@ Update all fields in the config to align with your project.
 In the build env, 
 set environment variables `GITHUB_USERNAME` and `GITHUB_PERSONAL_ACCESS_TOKEN`
 
-run `python3 runner_connect.py`
+Run `python3 runner_connect.py`
