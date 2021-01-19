@@ -2,10 +2,13 @@ import configparser
 import json
 import logging
 import os
+from pathlib import Path
 import random
 import requests
 import string
 import subprocess
+import tarfile
+
 
 logging.basicConfig(filename='runner-connect.log', level=logging.DEBUG)
 CONFIG = configparser.ConfigParser()
@@ -22,6 +25,23 @@ class GitHubActionsRunnerConnect:
         self.gh_session.auth = (GITHUB_USERNAME, GITHUB_PERSONAL_ACCESS_TOKEN)
         self.headers = {'Accept':'application/vnd.github.v3+json'}
         self.token = None
+
+    def check_for_runner(self):
+        Path(PATH_TO_RUNNER).mkdir(parents=True, exist_ok=True)
+        runner_installed = False
+        if 'bin' in os.listdir(PATH_TO_RUNNER):
+            runner_installed = True
+        return runner_installed
+
+    def install_runner(self):
+        download_url = CONFIG['github']['runner_download_url']
+        filename = CONFIG['github']['download_name']
+        filepath = os.path.join(PATH_TO_RUNNER, filename)
+        r = requests.get(download_url, allow_redirects=True)
+        with open(filepath, 'wb') as download:
+            download.write(r.content)
+        tar = tarfile.open(filepath)
+        tar.extractall(PATH_TO_RUNNER)
 
     def _build_get_token_request_url(self):
         try:
@@ -64,13 +84,19 @@ class GitHubActionsRunnerConnect:
         try:
             runner_path = PATH_TO_RUNNER
             start_path = os.path.join(runner_path, 'run.sh')
-            response = subprocess.run(start_path, capture_output=True)
-            logging.info(str(response.stdout))
+            subprocess.run(start_path)
+            logging.info('Successfully started runner')
         except Exception as e:
             logging.error(str(e))
 
 if __name__ == '__main__':
     runner_connect = GitHubActionsRunnerConnect()
-    runner_connect.generate_token()
-    runner_connect.register_runner()
-    runner_connect.start_runner()
+    if runner_connect.check_for_runner():
+        runner_connect.generate_token()
+        runner_connect.register_runner()
+        runner_connect.start_runner()
+    else:
+        runner_connect.install_runner()
+        runner_connect.generate_token()
+        runner_connect.register_runner()
+        runner_connect.start_runner()
