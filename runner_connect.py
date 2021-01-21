@@ -35,7 +35,8 @@ class GitHubActionsRunnerConnect:
 
     def install_runner(self):
         download_url = CONFIG['github']['runner_download_url']
-        filename = CONFIG['github']['download_name']
+        split_path = os.path.split(download_url)
+        filename = split_path[1]
         filepath = os.path.join(PATH_TO_RUNNER, filename)
         r = requests.get(download_url, allow_redirects=True)
         with open(filepath, 'wb') as download:
@@ -84,8 +85,8 @@ class GitHubActionsRunnerConnect:
         try:
             runner_path = PATH_TO_RUNNER
             start_path = os.path.join(runner_path, 'run.sh')
-            subprocess.run(start_path)
-            logging.info('Successfully started runner')
+            subprocess.Popen(start_path, shell=True)
+            logging.info('Runner started.')
         except Exception as e:
             logging.error(str(e))
 
